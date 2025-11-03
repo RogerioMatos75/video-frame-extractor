@@ -161,9 +161,13 @@ class FrameExtractorApp:
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             blurred_frame = cv2.GaussianBlur(gray_frame, (5, 5), 0)
             edges = cv2.Canny(blurred_frame, 50, 150)
+
+            # Invert colors: white lines on black bg -> black lines on white bg
+            inverted_edges = cv2.bitwise_not(edges)
+
             base_filename = os.path.basename(image_path)
             output_path = os.path.join(output_folder, base_filename)
-            cv2.imwrite(output_path, edges)
+            cv2.imwrite(output_path, inverted_edges)
             self.status_label.config(text=f"Step 2/2: Converting... ({i+1}/{total_files})")
             self.master.update_idletasks()
 
